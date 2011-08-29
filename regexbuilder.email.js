@@ -36,9 +36,11 @@ RegexBuilder.defineRules({
 	// Printable US-ASCII characters not including "(", ")", or "\"
 	ctext: function() {
 		return "(" +
-			this.encodeRange( 33, 39 ) + "|" +
-			this.encodeRange( 42, 91 ) + "|" +
-			this.encodeRange( 93, 126 ) + "|" +
+			"[" +
+				this.encodeRange( 33, 39 ) +
+				this.encodeRange( 42, 91 ) +
+				this.encodeRange( 93, 126 ) +
+			"]|" +
 			this.rule( "obsCtext" ) +
 		")";
 	},
@@ -102,9 +104,15 @@ RegexBuilder.defineRules({
 	},
 
 	dotAtom: function() {
-		return this.rule( "CFWS" ) + "?" +
-			this.rule( "dotAtomText" ) +
-			this.rule( "CFWS" ) + "?";
+		var comment,
+			rule = this.rule( "dotAtomText" );
+
+		if ( this.options.comments ) {
+			comment = this.rule( "CFWS" ) + "?";
+			rule = comment + rule + comment;
+		}
+
+		return rule;
 	},
 
 	// Special characters that do not appear in atext
@@ -118,9 +126,11 @@ RegexBuilder.defineRules({
 	// Printable US-ASCII characters not including "\" or the quote character
 	qtext: function() {
 		return "(" +
-			this.encode( 33 ) + "|" +
-			this.encodeRange( 35, 91 ) + "|" +
-			this.encodeRange( 93, 126 ) + "|" +
+			"[" +
+				this.encode( 33 ) +
+				this.encodeRange( 35, 91 ) +
+				this.encodeRange( 93, 126 ) +
+			"]|" +
 			this.rule( "obsQtext" ) +
 		")";
 	},
@@ -170,19 +180,30 @@ RegexBuilder.defineRules({
 	},
 
 	localPart: function() {
-		return "(" +
-			this.rule( "dotAtom" )  + "|" +
-			this.rule( "quotedString" ) + "|" +
-			this.rule( "obsLocalPart" ) +
-		")";
+		var alternatives = [
+			this.rule( "dotAtom" )
+		];
+		if ( this.options.localQuoted ) {
+			alternatives.push( this.rule( "quotedString" ) );
+		}
+		if ( this.options.obsolete ) {
+			alternatives.push( this.rule( "obsLocalPart" ) );
+		}
+		return "(" + alternatives.join( "|" ) + ")";
 	},
 
 	domain: function() {
-		return "(" +
-			this.rule( "dotAtom" ) + "|" +
-			this.rule( "domainLiteral" ) + "|" +
-			this.rule( "obsDomain" ) +
-		")";
+		// TODO: add options/definitions for reasonable protocols
+		var alternatives = [
+			this.rule( "dotAtom" )
+		];
+		if ( this.options.domainLiteral ) {
+			alternatives.push( this.rule( "domainLiteral" ) );
+		}
+		if ( this.options.obsolete ) {
+			alternatives.push( this.rule( "obsDomain" ) );
+		}
+		return "(" + alternatives.join( "|" ) + ")";
 	},
 
 	domainLiteral: function() {
@@ -200,8 +221,10 @@ RegexBuilder.defineRules({
 	// Printable US-ASCII characters not including "[", "]", or "\"
 	dtext: function() {
 		return "(" +
-			this.encodeRange( 33, 90 ) + "|" +
-			this.encodeRange( 94, 126 ) + "|" +
+			"[" +
+				this.encodeRange( 33, 90 ) +
+				this.encodeRange( 94, 126 ) +
+			"]|" +
 			this.rule( "obsDtext" ) +
 		")";
 	}

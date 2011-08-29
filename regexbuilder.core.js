@@ -10,7 +10,9 @@ RegexBuilder.defineRules({
 
 	// any 7-bit US-ASCII character, excluding NUL
 	CHAR: function() {
-		return this.encodeRange( 0x01, 0x7F );
+		return "[" +
+			this.encodeRange( 0x01, 0x7F ) +
+		"]";
 	},
 
 	// carriage return
@@ -20,7 +22,10 @@ RegexBuilder.defineRules({
 
 	// Internet standard newline
 	CRLF: function() {
-		return this.rule( "CR" ) + this.rule( "LF" );
+		return "(" +
+			this.rule( "CR" ) +
+			this.rule( "LF" ) +
+		")";
 	},
 
 	// controls
@@ -64,7 +69,9 @@ RegexBuilder.defineRules({
 
 	// 8 bits of data
 	OCTET: function() {
-		return this.encodeRange( 0x00, 0xFF );
+		return "[" +
+			this.encodeRange( 0x00, 0xFF ) +
+		"]";
 	},
 
 	// space
@@ -74,7 +81,9 @@ RegexBuilder.defineRules({
 
 	// visible (printing) characters
 	VCHAR: function() {
-		return this.encodeRange( 0x21, 0x7E );
+		return "[" +
+			this.encodeRange( 0x21, 0x7E ) +
+		"]";
 	},
 
 	// white space

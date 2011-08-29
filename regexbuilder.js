@@ -17,9 +17,10 @@ function map( arr, fn ) {
 	return ret;
 }
 
-var RegexBuilder = window.RegexBuilder = function( language ) {
+var RegexBuilder = window.RegexBuilder = function( language, options ) {
 	this.language = language || "JavaScript";
 	this.languageDefn = RegexBuilder.languages[ this.language ];
+	this.options = options || {};
 	this.rules = extend( {}, RegexBuilder.rules );
 };
 
