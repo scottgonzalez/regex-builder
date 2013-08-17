@@ -2,6 +2,8 @@
 
 A tool for generating regular expressions.
 
+Support this project by [donating on Gittip](https://www.gittip.com/scottgonzalez/).
+
 ## Overview
 
 RegexBuilder allows you to define complex regular expressions in terms of smaller
@@ -19,4 +21,9 @@ TODO
 
 ## License
 
-Copyright 2012 Scott González. Licensed under the MIT license.
+Copyright 2012 Scott González.
+Released under the terms of the MIT license.
+
+---
+
+Support this project by [donating on Gittip](https://www.gittip.com/scottgonzalez/).
